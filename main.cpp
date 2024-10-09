@@ -54,4 +54,8 @@ list.tempeture_adjust(0);
 // display tempatures
 list.display(0);
     std::cout << "\n";
+list.tempeture_adjust(0);
+// display tempatures
+list.display(0);
+    std::cout << "\n";
 }
