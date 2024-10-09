@@ -3,7 +3,6 @@
 namespace user_input {
 
 
-
 struct simulation_parameter {
 private:
     size_t m_size;
@@ -42,6 +41,36 @@ public:
 namespace core_data {
 
 
+namespace object_temperature_data {
+
+
+struct object_temperature_data_container {
+
+    double* container = nullptr;
+
+    object_temperature_data_container () = default;
+
+    ~object_temperature_data_container() {if (container != nullptr) {
+        delete[] container; container = nullptr;}
+    }
+
+    object_temperature_data_container(size_t S) {
+
+        container = new double[S];
+    }
+
+    object_temperature_data_container (const double* to_copy, size_t S) {
+
+        memcpy(container,to_copy,sizeof (double)* S);
+    }
+
+    double operator[] (size_t index) {return container[index];}
+
+};
+
+}
+
+
 class simulation_data {
 
     double* m_data = nullptr;
@@ -63,10 +92,17 @@ public:
 // tick to change tempatures
     void tick () {
 
+//        auto *adjusted_tempature = new object_temperature_data::object_temperature_data_container(m_length);
+        auto *adjusted_tempature = new double[m_length];
+
         for (size_t i = 0; i < m_length; i++) {
 
-            m_data[i] = (m_data[i] + K*(m_data[(i+1) % m_length] -2*(m_data[i]) + m_data[(i-1) % m_length]));
+            adjusted_tempature[i] = (m_data[i] + K*(m_data[(i+1) % m_length] -2*(m_data[i]) + m_data[(i-1) % m_length]));
         }
+
+        memcpy(m_data,adjusted_tempature,(sizeof(double)* m_length));
+
+        delete[] adjusted_tempature;
     }
 
 
